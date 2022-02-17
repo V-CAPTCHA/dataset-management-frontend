@@ -35,7 +35,7 @@ pipeline {
                 stage('Docker Deploy') {
             steps {
                 
-                sh 'docker run -p 3000:3000/tcp --restart=always -d --name dataset-management-frontend dataset-management-frontend:latest'
+                sh 'docker run -p 6000:3000/tcp --restart=always -d --name dataset-management-frontend dataset-management-frontend:latest'
             }
         }
     }
