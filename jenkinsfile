@@ -1,0 +1,42 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Git Clone') {
+            steps {
+                cleanWs()
+                git branch: 'main',url: 'https://github.com/V-CAPTCHA/dataset-management-frontend.git'
+                sh 'cp /var/lib/jenkins/workspace/env/dataset-management-frontend/.env ./.env'
+            }
+        }
+        stage('SonarQube Analysis') {
+            environment {
+            scannerHome = tool 'SonarLocal'
+        }
+            steps{
+               withSonarQubeEnv('SonarLocal') {
+                   sh "${scannerHome}/bin/sonar-scanner"
+}
+        }
+        }
+               stage('Docker PreBuild Clear old image') {
+            steps {
+                
+                sh 'docker stop dataset-management-frontend || true && docker rm dataset-management-frontend || true'
+                sh 'docker image rm dataset-management-frontend || true'
+            }
+        }
+                stage('Docker Build') {
+            steps {
+                
+                sh 'docker build . -t dataset-management-frontend'
+            }
+        }
+                stage('Docker Deploy') {
+            steps {
+                
+                sh 'docker run -p 3000:3000/tcp --restart=always -d --name dataset-management-frontend dataset-management-frontend:latest'
+            }
+        }
+    }
+}
