@@ -1,7 +1,7 @@
 <template>
   <div class="login" v-if="!this.$store.getters.isLoggedIn">
     <center>
-      <h2>Login to VCAPTCHA</h2>
+      <h2>Login to Dataset Management</h2>
     </center>
     <v-card outlined elevation="0" width="480" class="mx-auto my-5 pt-6">
       <v-form>
@@ -33,9 +33,6 @@
             outlined
             dense
           ></v-text-field>
-
-          <router-link id="forgot-password" to="/recoverpassword" class="text-caption">Forgot your password ?</router-link>
-          
           <!-- Submit -->
           <v-btn 
             id="loginBtn" 
@@ -49,9 +46,6 @@
         </v-container>
       </v-form>
     </v-card>
-    <center>
-      <span id="registereNow">Don't have an account yet? </span><router-link to="/register">Register now</router-link>
-    </center>
   </div>
 </template>
 
