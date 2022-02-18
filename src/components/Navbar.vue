@@ -22,13 +22,7 @@
 
             <v-list>
               <v-list-item>
-                <v-btn plain :to="{name: 'Dashboard'}">Dashboard</v-btn>
-              </v-list-item>
-              <v-list-item>
-                <v-btn plain :to="{name: 'KeyManagement'}">Key Management</v-btn>
-              </v-list-item>
-              <v-list-item>
-                <v-btn plain :to="{name: 'EditProfile'}">Edit Profile</v-btn>
+                <v-btn plain :to="{name: 'Dashboard'}">Password change</v-btn> <!-- ***must replace to Password change module*** -->
               </v-list-item>
               <v-list-item>
                 <v-btn text plain @click="logOut()">Logout</v-btn>
