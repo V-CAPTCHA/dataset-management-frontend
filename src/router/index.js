@@ -29,7 +29,13 @@ const routes = [
         path: '/keymanagement',
         name: 'KeyManagement',
         component: () => import('../views/KeyManagement.vue')
+      },
+      {
+        path: '/DatasetManagement',
+        name: 'DatasetManagement',
+        component: () => import('../views/DatasetManagement.vue')
       }
+      
     ]
   },
   {
