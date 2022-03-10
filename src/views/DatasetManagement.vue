@@ -59,16 +59,16 @@
     </v-simple-table>
 
     <!-- Create key -->
-    <KeyForm 
-      title="Create Key" 
+    <DatasetForm 
+      title="Create Dataset" 
       v-if="createBoxIsShow" 
       :isCreate="true"
       :cancel="closeCreateBox" 
     />
 
     <!-- Edit key -->
-    <KeyForm 
-      title="Edit Key" 
+    <DatasetForm 
+      title="Edit Dataset" 
       v-if="editBoxIsShow" 
       :isEdit="true"
       :cancel="closeEditBox"
@@ -81,7 +81,7 @@
 </template>
 
 <script>
-import KeyForm from '../components/KeyForm.vue';
+import DatasetForm from '../components/DatasetForm.vue';
 
 export default {
   name: 'DatasetManagement',
@@ -89,13 +89,14 @@ export default {
     title: 'Dataset Management | VCAPTCHA '
   },
   components: {
-    KeyForm,
+    DatasetForm,
   },
   data() {
     return {
       id: '',
-      name: '',
-      domain: '',
+      image: '',
+      question: '',
+      answer: '',
       datasets: [],
       createBoxIsShow: false,
       editBoxIsShow: false,
@@ -119,10 +120,11 @@ export default {
     closeCreateBox: function() {
       this.createBoxIsShow = false;
     },
-    showEditBox: function(id, name, domain) {
+    showEditBox: function(id, image, question, answer) {
       this.id = id;
-      this.name = name;
-      this.domain = domain;
+      this.image = image;
+      this.question = question;
+      this.answer = answer;
       this.editBoxIsShow = true;
     },
     closeEditBox: function() {

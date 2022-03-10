@@ -8,8 +8,8 @@ export const dataset = {
     dataset: []
   },
   mutations: {
-    key_success(state, key) {
-      state.dataset = key
+    key_success(state, dataset) {
+      state.dataset = dataset
     }
   },
   actions: {
@@ -23,8 +23,8 @@ export const dataset = {
             let dataset = res.data.data;
             resolve(dataset);
           }
-          if(res.data.message === "key does not exist"){
-            resolve("key does not exist")
+          if(res.data.message === "dataset does not exist"){
+            resolve("dataset does not exist")
           }
         })
         .catch(err => {
@@ -38,14 +38,17 @@ export const dataset = {
       }) 
     },
     //create key
-    createKey({commit}, key) {
+    createDataset({commit}, dataset) {
       return new Promise((resolve, reject) => {
-
-        axios.post(API_URL+'/keys', key)
+        axios.post(API_URL+'/dataset', dataset ,{
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
+        })
         .then(res => {
-          if(res.data.message === "create key successfully") {
+          if(res.data.message === "create dataset successfully") {
             let payload = {
-              text: "Create key sucess",
+              text: "Create dataset sucess",
               snackbar: true
             }
             commit('updateSnackbar', payload, {root: true})
@@ -74,7 +77,7 @@ export const dataset = {
     editKey({commit}, data) {
       return new Promise((resolve, reject) => {
         axios.patch(API_URL+'/keys/'+data.id, data.key).then(res => {
-          if(res.data.message === "edit key successfully") {
+          if(res.data.message === "edit dataset successfully") {
             let payload = {
               text: "Edit key sucess",
               snackbar: true
@@ -101,13 +104,13 @@ export const dataset = {
       })
     },
     //delete key
-    deleteKey({commit}, id) {
+    deleteDataset({commit}, id) {
       return new Promise((resolve, reject) => {
-        axios.delete(API_URL+'/keys/'+id)
+        axios.delete(API_URL+'/dataset/'+id)
         .then(res => {
-          if(res.data.message === "delete key successfully") {
+          if(res.data.message === "delete dataset successfully") {
             let payload = {
-              text: "Delete key sucess",
+              text: "Delete dataset sucess",
               snackbar: true
             }
             commit('updateSnackbar', payload, {root: true})
