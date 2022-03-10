@@ -12,7 +12,7 @@
         <thead>
           <tr>
             <th class="text-left" style="color: white;">ID</th>
-            <th class="text-left" style="color: white;">Creation date</th>
+            <th class="text-left" style="color: white;">Image</th>
             <th class="text-left" style="color: white;">Question</th>
             <th class="text-left" style="color: white;">Answer</th>
             <th class="text-left" style="color: white;"></th>
@@ -20,14 +20,12 @@
         </thead>
         
         <!-- Body -->
-        <tbody v-if="!!keys">
-          <tr v-for="key in keys" :key="key.key_id">
-            <td>{{ key.key_name }}</td>
-            <td>{{ key.creation_date }}</td>
-            <td>{{ key.key_value }}</td>
-            <td>
-              <a :href="'https://www.'+key.domain" target="_blank">{{ key.domain }}</a>
-            </td>
+        <tbody v-if="!!datasets">
+          <tr v-for="dataset in datasets" :key="dataset.dataset_id">
+            <td>{{ dataset.dataset_id }}</td>
+            <td><img class="imgdataset" v-bind:src="'https://dataset.vcaptcha.work/'+dataset.dataset_img"> </td>
+            <td>{{ dataset.dataset_question }}</td>
+            <td>{{ dataset.dataset_reply }}</td>
             <td>
               <v-menu offset-y>
                 <template v-slot:activator="{ on, attrs}">
@@ -98,20 +96,20 @@ export default {
       id: '',
       name: '',
       domain: '',
-      keys: [],
+      datasets: [],
       createBoxIsShow: false,
       editBoxIsShow: false,
     }
   },
   methods: {
-    getAllKey: function() {
-      this.$store.dispatch('getAllKey')
-      .then((keys) => {
-        if(keys === "key does not exist") {
-          this.keys = [];
+    getAllDataset: function() {
+      this.$store.dispatch('getAllDataset')
+      .then((dataset) => {
+        if(dataset === "Dataset does not exist") {
+          this.datasets = [];
         }
         else {
-          this.keys = keys
+          this.datasets = dataset
         }
       })
     },
@@ -140,10 +138,10 @@ export default {
     },
   },
   beforeUpdate() {
-    this.getAllKey();
+    this.getAllDataset();
   },
   mounted() {
-    this.getAllKey();
+    this.getAllDataset();
   },
 }
 </script>
@@ -157,5 +155,8 @@ export default {
 thead {
   background-color: #1a73e8;
 }
-
+.imgdataset{
+  width: 65px;
+  padding-top: 8px;
+}
 </style>
