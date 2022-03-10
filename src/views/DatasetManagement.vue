@@ -2,7 +2,7 @@
   <div class="dataset-management">     
     <div class="header">
       <v-btn text color="#1a73e8" class="mb-2" @click="showCreateBox()">
-        + CREATE KEY
+        + CREATE DATASET
         </v-btn>
     </div>
 
@@ -36,10 +36,10 @@
 
                 <v-list>
                   <v-list-item>
-                    <v-btn plain color="#1a73e8" @click="showEditBox(key.key_id, key.key_name, key.domain)">Edit</v-btn>
+                    <v-btn plain color="#1a73e8" @click="showEditBox(dataset.dataset_id, key.key_name, key.domain)">Edit</v-btn>
                   </v-list-item>
                   <v-list-item>
-                    <v-btn plain color="red" @click="deleteKey(key.key_id)">Delete</v-btn>
+                    <v-btn plain color="red" @click="deleteDataset(dataset.dataset_id)">Delete</v-btn>
                   </v-list-item>
                 </v-list>
               </v-menu>         
@@ -131,9 +131,9 @@ export default {
     confirmCreate: function() {
       console.log('create');
     },
-    deleteKey(id) {
-      this.$store.dispatch('deleteKey', id)
-      .then(() => this.getAllKey())
+    deleteDataset(id) {
+      this.$store.dispatch('deleteDataset', id)
+      .then(() => this.getAllDataset())
       
     },
   },
