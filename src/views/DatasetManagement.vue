@@ -23,9 +23,15 @@
         <tbody v-if="!!datasets">
           <tr v-for="dataset in datasets" :key="dataset.dataset_id">
             <td>{{ dataset.dataset_id }}</td>
-            <td><img class="imgdataset" v-bind:src="'https://dataset.vcaptcha.work/'+dataset.dataset_img"> </td>
+            <td>
+          <v-img
+  lazy-src="https://picsum.photos/id/11/10/6"
+  max-width="80"
+  v-bind:src="'https://dataset.vcaptcha.work/'+dataset.dataset_img"
+></v-img>  
+            </td>
             <td>{{ dataset.dataset_question }}</td>
-            <td>{{ dataset.dataset_reply }}</td>
+            <td><v-chip  class="mr-1" color="blue" link outlined pill v-for=" datasets in dataset.dataset_reply" :key="datasets.dataset_reply" >{{datasets}}</v-chip></td>
             <td>
               <v-menu offset-y>
                 <template v-slot:activator="{ on, attrs}">
@@ -156,9 +162,5 @@ export default {
 
 thead {
   background-color: #1a73e8;
-}
-.imgdataset{
-  width: 65px;
-  padding-top: 8px;
 }
 </style>

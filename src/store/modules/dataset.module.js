@@ -21,6 +21,10 @@ export const dataset = {
         .then(res => {
           if(res.data.message === "get all dataset successfully") {
             let dataset = res.data.data;
+            for(let i = 0; i < dataset.length; i++){
+              dataset[i].dataset_reply = dataset[i].dataset_reply.split(",");
+            }
+            
             resolve(dataset);
           }
           if(res.data.message === "dataset does not exist"){
