@@ -28,7 +28,6 @@ export const auth = {
     login({commit}, user) {
       return new Promise((resolve, reject) => {
         commit('auth_request')
-
         axios.post(API_URL+'/login', user)
         .then((res) => {
           if(res.data.message === 'authorization successfully') {

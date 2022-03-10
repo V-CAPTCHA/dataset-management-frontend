@@ -11,10 +11,10 @@
         <!-- Headers -->
         <thead>
           <tr>
-            <th class="text-left" style="color: white;">Name</th>
-            <th class="text-left" style="color: white;">Create Date</th>
-            <th class="text-left" style="color: white;">Key ID</th>
-            <th class="text-left" style="color: white;">Domain</th>
+            <th class="text-left" style="color: white;">ID</th>
+            <th class="text-left" style="color: white;">Creation date</th>
+            <th class="text-left" style="color: white;">Question</th>
+            <th class="text-left" style="color: white;">Answer</th>
             <th class="text-left" style="color: white;"></th>
           </tr>
         </thead>
