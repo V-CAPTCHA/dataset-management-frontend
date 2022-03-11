@@ -1,83 +1,102 @@
 <template>
   <div class="key-form">
-    <v-card width="640" class="form-box">
+    <v-card width="840" class="form-box">
       <v-card-title>
-        {{title}}
+        {{ title }}
       </v-card-title>
 
       <v-card-text>
         <!-- Image -->
 
-        <template>
-        <v-file-input
-            v-model="files"
-            accept="image/png, image/jpeg, image/gif"
-            placeholder="Select an image"
-            prepend-icon="mdi-camera"
-            label="Image"
-            show-size
-        ></v-file-input>
-        </template>
+        <v-row>
+          <v-col cols="4">
+            <v-img
+              lazy-src="../assets/banner.jpg"
+              max-height="150"
+              max-width="250"
+              :src="url"
+            ></v-img>
+            <v-file-input
+              v-model="files"
+              accept="image/png, image/jpeg, image/gif"
+              placeholder="Select an image"
+              prepend-icon="mdi-file-image"
+              label="Click for select image"
+              show-size
+              @change="onFileChange"
+            ></v-file-input>
+          </v-col>
 
-        <!-- Question -->
-        <v-text-field
-          id="domain"
-          v-model="question"
-          :rules="[rules.required]"
-          label="Question"
-          counter="50"
-          required
-          outlined
-          dense
-        ></v-text-field>
-
-        <!-- Answer -->
-        <v-text-field
-          id="domain"
-          v-model="answer"
-          :rules="[rules.required]"
-          label="Answer"
-          counter="50"
-          required
-          outlined
-          dense
-        ></v-text-field>
+          <v-col cols="8">
+            <!-- Question -->
+            <v-text-field
+              id="question"
+              v-model="question"
+              :rules="[rules.required]"
+              label="Question"
+              required
+              outlined
+              dense
+            ></v-text-field>
+            <!-- textchip -->
+            <v-text-field
+              label="Answer (max 5)"
+              v-model="textchip"
+              v-on:keyup.enter="addChips()"
+              required
+            >
+              <template v-slot:prepend-inner>
+                <div v-for="(chipText, index) in answer" :key="index">
+                  <v-chip @click="delChips(chipText)" class="ma-1">
+                    {{ chipText }}
+                  </v-chip>
+                </div>
+              </template>
+            </v-text-field>
+          </v-col>
+        </v-row>
       </v-card-text>
-
-      <v-container class="pt-0 buttonContainer">
+      <span class="d-flex flex-wrap">
+        <v-container class="pt-0 buttonContainer">
           <!-- Confirm btn -->
-          <v-btn 
-            id="confirmBtn" 
-            color="#1a73e8" 
-            depressed dark text
+          <v-btn
+            id="confirmBtn"
+            color="#1a73e8"
+            depressed
+            dark
+            text
             @click="confirm()"
           >
             Confirm
           </v-btn>
 
           <!-- Cancel btn -->
-          <v-btn 
-            id="cancleBtn" 
-            color="red" 
-            depressed dark text
-            @click="cancel()" 
+          <v-btn
+            id="cancleBtn"
+            color="red"
+            depressed
+            dark
+            text
+            @click="cancel()"
           >
             Cancel
           </v-btn>
         </v-container>
+      </span>
     </v-card>
   </div>
 </template>
 
 <script>
 export default {
-  name: "KeyForm",
+  name: 'KeyForm',
   props: {
     cancel: Function,
     title: String,
-    key_id: Number,
-    key_name: String,
-    key_domain: String,
+    dataset_id: Number,
+    dataset_img: String,
+    dataset_question: String,
+    dataset_reply: Array,
     isCreate: Boolean,
     isEdit: Boolean,
   },
@@ -86,47 +105,63 @@ export default {
       id: '',
       files: [],
       question: '',
-      answer: '',
+      textchip: '',
+      answer: [],
+      url: null,
+      datasetAPI:process.env.VUE_APP_DATASET_URL,
       rules: {
-        required: value => !!value || 'Required.',
-      }
-    }
+        required: (value) => !!value || 'Required.',
+      },
+      
+    };
   },
   methods: {
     confirm: function() {
+      let DatasetFormData = new FormData();
+      DatasetFormData.append('dataset_image_upload', this.files);
+      DatasetFormData.append('dataset_question', this.question);
+      DatasetFormData.append('dataset_reply', this.answer);
 
-    let DatasetFormData = new FormData();
-    DatasetFormData.append("dataset_image_upload", this.files);
-    DatasetFormData.append("dataset_question", this.question);
-    DatasetFormData.append("dataset_reply", this.answer);
-    DatasetFormData.append("admin_id", 1);//this.admin_id
-       
       //create key
-      if(this.isCreate) {
-        this.$store.dispatch("createDataset", DatasetFormData)
-        .then(() => {
+      if (this.isCreate) {
+        this.$store.dispatch('createDataset', DatasetFormData).then(() => {
           this.cancel();
-        })
+        });
       }
       //edit key
-      else if(this.isEdit) {
+      else if (this.isEdit) {
         const data = {
           id: this.id,
-          key: key
-        }
-        this.$store.dispatch("editKey", data)
-        .then(() => {
+          key: key,
+        };
+        this.$store.dispatch('dataset', data).then(() => {
           this.cancel();
-        })
+        });
       }
-    }
+    },
+    onFileChange: function(e) {
+      this.url = URL.createObjectURL(this.files);
+    },
+    addChips() {
+      if (this.textchip.length && this.answer.length < 5) {
+         
+        this.answer.push(this.textchip);
+        this.textchip = '';
+      }
+    },
+    delChips(chip) {
+      var index = this.answer.indexOf(chip);
+      if (index !== -1) {
+        this.answer.splice(index, 1);
+      }
+    },
   },
   mounted() {
-    this.id = this.key_id;
-    this.name = this.key_name;
-    this.domain = this.key_domain;
+    this.url = this.datasetAPI+this.dataset_img;
+    this.question = this.dataset_question;
+    this.answer = this.dataset_reply;
   },
-}
+};
 </script>
 
 <style scoped>

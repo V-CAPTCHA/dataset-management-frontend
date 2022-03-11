@@ -25,10 +25,11 @@
             <td>{{ dataset.dataset_id }}</td>
             <td>
           <v-img
-  lazy-src="https://picsum.photos/id/11/10/6"
   max-width="80"
-  v-bind:src="'https://dataset.vcaptcha.work/'+dataset.dataset_img"
+  v-bind:src=datasetAPI+dataset.dataset_img
 ></v-img>  
+
+
             </td>
             <td>{{ dataset.dataset_question }}</td>
             <td><v-chip  class="mr-1" color="blue" link outlined pill v-for=" datasets in dataset.dataset_reply" :key="datasets.dataset_reply" >{{datasets}}</v-chip></td>
@@ -42,7 +43,7 @@
 
                 <v-list>
                   <v-list-item>
-                    <v-btn plain color="#1a73e8" @click="showEditBox(dataset.dataset_id, key.key_name, key.domain)">Edit</v-btn>
+                    <v-btn plain color="#1a73e8" @click="showEditBox(dataset.dataset_id,dataset.dataset_img,dataset.dataset_question,dataset.dataset_reply)">Edit</v-btn>
                   </v-list-item>
                   <v-list-item>
                     <v-btn plain color="red" @click="deleteDataset(dataset.dataset_id)">Delete</v-btn>
@@ -78,17 +79,18 @@
       v-if="editBoxIsShow" 
       :isEdit="true"
       :cancel="closeEditBox"
-      :key_id="id"
-      :key_name="name" 
-      :key_domain="domain" 
+      :dataset_id="id"
+      :dataset_img="img" 
+      :dataset_question="question"
+      :dataset_reply="reply"
     />
 
   </div>
 </template>
 
 <script>
-import DatasetForm from '../components/DatasetForm.vue';
 
+import DatasetForm from '../components/DatasetForm.vue';
 export default {
   name: 'DatasetManagement',
   metaInfo: {
@@ -100,12 +102,13 @@ export default {
   data() {
     return {
       id: '',
-      image: '',
+      img: '',
       question: '',
-      answer: '',
+      reply: '',
       datasets: [],
       createBoxIsShow: false,
       editBoxIsShow: false,
+      datasetAPI:process.env.VUE_APP_DATASET_URL
     }
   },
   methods: {
@@ -126,11 +129,11 @@ export default {
     closeCreateBox: function() {
       this.createBoxIsShow = false;
     },
-    showEditBox: function(id, image, question, answer) {
+    showEditBox: function(id, img, question, reply) {
       this.id = id;
-      this.image = image;
+      this.img = img;
       this.question = question;
-      this.answer = answer;
+      this.reply = reply;
       this.editBoxIsShow = true;
     },
     closeEditBox: function() {
@@ -150,6 +153,7 @@ export default {
   },
   mounted() {
     this.getAllDataset();
+    console.log(this.datasetAPI)
   },
 }
 </script>
