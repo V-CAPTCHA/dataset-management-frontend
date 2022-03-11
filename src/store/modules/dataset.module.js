@@ -78,9 +78,10 @@ export const dataset = {
       })
     },
     //edit key
-    editKey({commit}, data) {
+    editDataset({commit}, data) {
       return new Promise((resolve, reject) => {
-        axios.patch(API_URL+'/keys/'+data.id, data.key).then(res => {
+        axios.patch(API_URL+'/dataset/'+data.get('id'), data).then(res => {
+          console.log(data)
           if(res.data.message === "edit dataset successfully") {
             let payload = {
               text: "Edit key sucess",

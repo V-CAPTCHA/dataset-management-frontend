@@ -153,7 +153,6 @@ export default {
   },
   mounted() {
     this.getAllDataset();
-    console.log(this.datasetAPI)
   },
 }
 </script>

@@ -130,11 +130,12 @@ export default {
       }
       //edit key
       else if (this.isEdit) {
-        const data = {
-          id: this.id,
-          key: key,
-        };
-        this.$store.dispatch('dataset', data).then(() => {
+      let DatasetFormData = new FormData();
+      DatasetFormData.append('id', this.id);
+      DatasetFormData.append('dataset_image_upload', this.files);
+      DatasetFormData.append('new_dataset_question', this.question);
+      DatasetFormData.append('new_dataset_reply', this.answer);
+        this.$store.dispatch('editDataset', DatasetFormData).then(() => {
           this.cancel();
         });
       }
@@ -157,6 +158,7 @@ export default {
     },
   },
   mounted() {
+    this.id = this.dataset_id;
     this.url = this.datasetAPI+this.dataset_img;
     this.question = this.dataset_question;
     this.answer = this.dataset_reply;
