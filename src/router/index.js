@@ -16,7 +16,7 @@ const routes = [
     component: Login
   },
   {
-    path: '/dashboard',
+    path: '/DatasetManagement',
     name: 'UserManagement',
     component: () => import('../views/UserManagement.vue'),
     children: [
