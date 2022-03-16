@@ -146,6 +146,15 @@ export default {
   mounted() {
     this.getAllAdmin();
   },
+  created() {
+    if(!this.isSuperAdmin) 
+      this.$router.replace('/DatasetManagement')
+  },
+  computed: {
+    isSuperAdmin: function() {
+      return this.$store.getters.isSuperAdmin
+    }
+  }
 }
 </script>
 

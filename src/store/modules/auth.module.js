@@ -6,6 +6,7 @@ export const auth = {
   state: {
     status: '',
     token: localStorage.getItem('token') || '',
+    isSuper: false,
   },
   mutations: {
     auth_request(state) {
@@ -21,6 +22,12 @@ export const auth = {
     logout(state) {
       state.status = ''
       state.token = ''
+    },
+    superActivate(state) {
+      state.isSuper = true
+    },
+    superDeactivate(state) {
+      state.isSuper = false
     },
   },
   actions: {
@@ -43,6 +50,17 @@ export const auth = {
             }
             commit('updateSnackbar', payload, {root: true})
             commit('auth_success', token)
+
+            //Check Super Admin
+            axios.get(API_URL+'/admin/all')
+            .then(res => {
+              commit('superActivate');
+            })
+            .catch(err => {
+              if(err.response.data.message === 'Only super admin can get admin information') commit('superDeactivate');
+              else commit('superActivate');
+            })
+
             resolve(res)
           }
           else {
@@ -187,5 +205,6 @@ export const auth = {
   getters: {
     isLoggedIn: state => !!state.token,
     authStatus: state => state.status,
+    isSuperAdmin: state => state.isSuper,
   }
 }
