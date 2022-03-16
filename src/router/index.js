@@ -26,9 +26,19 @@ const routes = [
         component: () => import('../views/Dashboard.vue')
       },
       {
-        path: '/keymanagement',
-        name: 'KeyManagement',
-        component: () => import('../views/KeyManagement.vue')
+        path: '/admin-managment',
+        name: 'AdminManagement',
+        component: () => import('../views/AdminManagement.vue')
+      },
+      {
+        path: '/DatasetManagement',
+        name: 'DatasetManagement',
+        component: () => import('../views/DatasetManagement.vue')
+      },
+      {
+        path: '/manage-user',
+        name: 'ManageUser',
+        component: () => import('../views/ManageUser.vue')
       }
     ]
   },
