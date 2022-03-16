@@ -1,8 +1,8 @@
 <template>
-  <div class="key-management">     
+  <div class="admin-management">     
     <div class="header">
       <v-btn text color="#1a73e8" class="mb-2" @click="showCreateBox()">
-        + CREATE KEY
+        + CREATE ADMIN
         </v-btn>
     </div>
 
@@ -11,23 +11,21 @@
         <!-- Headers -->
         <thead>
           <tr>
-            <th class="text-left" style="color: white;">Name</th>
-            <th class="text-left" style="color: white;">Create Date</th>
-            <th class="text-left" style="color: white;">Key ID</th>
-            <th class="text-left" style="color: white;">Domain</th>
+            <th class="text-left" style="color: white;">ID</th>
+            <th class="text-left" style="color: white;">Email</th>
+            <th class="text-left" style="color: white;">First Name</th>
+            <th class="text-left" style="color: white;">Last Name</th>
             <th class="text-left" style="color: white;"></th>
           </tr>
         </thead>
         
         <!-- Body -->
-        <tbody v-if="!!keys">
-          <tr v-for="key in keys" :key="key.key_id">
-            <td>{{ key.key_name }}</td>
-            <td>{{ key.creation_date }}</td>
-            <td>{{ key.key_value }}</td>
-            <td>
-              <a :href="'https://www.'+key.domain" target="_blank">{{ key.domain }}</a>
-            </td>
+        <tbody v-if="!!admins">
+          <tr v-for="admin in admins" :key="admin.admin_id">
+            <td>{{ admin.admin_id }}</td>
+            <td>{{ admin.email }}</td>
+            <td>{{ admin.first_name }}</td>
+            <td>{{ admin.last_name }}</td>
             <td>
               <v-menu offset-y>
                 <template v-slot:activator="{ on, attrs}">
@@ -38,10 +36,10 @@
 
                 <v-list>
                   <v-list-item>
-                    <v-btn plain color="#1a73e8" @click="showEditBox(key.key_id, key.key_name, key.domain)">Edit</v-btn>
+                    <v-btn plain color="#1a73e8" @click="showEditBox(admin.admin_id, admin.email,admin.first_name, admin.last_name)">Edit</v-btn>
                   </v-list-item>
                   <v-list-item>
-                    <v-btn plain color="red" @click="deleteKey(key.key_id)">Delete</v-btn>
+                    <v-btn plain color="red" @click="deleteAdmin(admin.admin_id)">Delete</v-btn>
                   </v-list-item>
                 </v-list>
               </v-menu>         
@@ -60,58 +58,60 @@
       </template>
     </v-simple-table>
 
-    <!-- Create key -->
-    <KeyForm 
-      title="Create Key" 
+    <!-- Create admin -->
+    <AdminForm 
+      title="Create Admin" 
       v-if="createBoxIsShow" 
       :isCreate="true"
       :cancel="closeCreateBox" 
     />
 
-    <!-- Edit key -->
-    <KeyForm 
-      title="Edit Key" 
+    <!-- Edit admin -->
+    <AdminForm 
+      title="Edit Admin" 
       v-if="editBoxIsShow" 
       :isEdit="true"
       :cancel="closeEditBox"
-      :key_id="id"
-      :key_name="name" 
-      :key_domain="domain" 
+      :admin_id="admin_id"
+      :admin_email="email"
+      :admin_first_name="first_name" 
+      :admin_last_name="last_name" 
     />
 
   </div>
 </template>
 
 <script>
-import KeyForm from '../components/KeyForm.vue';
+import AdminForm from '../components/AdminForm.vue';
 
 export default {
   name: 'Home',
   metaInfo: {
-    title: 'Key Management | VCAPTCHA '
+    title: 'Admin Management | VCAPTCHA '
   },
   components: {
-    KeyForm,
+    AdminForm,
   },
   data() {
     return {
-      id: '',
-      name: '',
-      domain: '',
-      keys: [],
+      admin_id: '',
+      email: '',
+      first_name: '',
+      last_name: '',
+      admins: [],
       createBoxIsShow: false,
       editBoxIsShow: false,
     }
   },
   methods: {
-    getAllKey: function() {
-      this.$store.dispatch('getAllKey')
-      .then((keys) => {
-        if(keys === "key does not exist") {
-          this.keys = [];
+    getAllAdmin: function() {
+      this.$store.dispatch('getAllAdmin')
+      .then((admins) => {
+        if(admins === "admin does not exist") {
+          this.admins = [];
         }
         else {
-          this.keys = keys
+          this.admins = admins
         }
       })
     },
@@ -121,10 +121,11 @@ export default {
     closeCreateBox: function() {
       this.createBoxIsShow = false;
     },
-    showEditBox: function(id, name, domain) {
-      this.id = id;
-      this.name = name;
-      this.domain = domain;
+    showEditBox: function(admin_id, email, first_name, last_name) {
+      this.admin_id = admin_id;
+      this.email = email;
+      this.first_name = first_name;
+      this.last_name = last_name;
       this.editBoxIsShow = true;
     },
     closeEditBox: function() {
@@ -133,17 +134,17 @@ export default {
     confirmCreate: function() {
       console.log('create');
     },
-    deleteKey(id) {
-      this.$store.dispatch('deleteKey', id)
-      .then(() => this.getAllKey())
+    deleteAdmin(id) {
+      this.$store.dispatch('deleteAdmin', id)
+      .then(() => this.getAllAdmin())
       
     },
   },
   beforeUpdate() {
-    this.getAllKey();
+    this.getAllAdmin();
   },
   mounted() {
-    this.getAllKey();
+    this.getAllAdmin();
   },
 }
 </script>
