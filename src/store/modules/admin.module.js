@@ -3,28 +3,28 @@ import axios from "axios"
 const API_URL = process.env.VUE_APP_API_URL
 
 
-export const key = {
+export const admin = {
   state: {
-    key: []
+    admin: []
   },
   mutations: {
-    key_success(state, key) {
-      state.key = key
+    admin_success(state, admin) {
+      state.admin = admin
     }
   },
   actions: {
-    //get all key
-    getAllKey({commit}) {
+    //get all admin
+    getAllAdmin({commit}) {
       return new Promise((resolve, reject) => {
 
-        axios.get(API_URL+'/keys')
+        axios.get(API_URL+'/admin/all')
         .then(res => {
-          if(res.data.message === "get all keys successfully") {
-            let keys = res.data.data;
-            resolve(keys);
+          if(res.data.message === "get all admin successfully") {
+            let admins = res.data.data;
+            resolve(admins);
           }
-          if(res.data.message === "key does not exist"){
-            resolve("key does not exist")
+          if(res.data.message === "admin does not exist"){
+            resolve("admin does not exist")
           }
         })
         .catch(err => {
@@ -37,15 +37,15 @@ export const key = {
         })
       }) 
     },
-    //create key
-    createKey({commit}, key) {
+    //create admin
+    createAdmin({commit}, admin) {
       return new Promise((resolve, reject) => {
 
-        axios.post(API_URL+'/keys', key)
+        axios.post(API_URL+'/admin', admin)
         .then(res => {
-          if(res.data.message === "create key successfully") {
+          if(res.data.message === "create admin successfully") {
             let payload = {
-              text: "Create key sucess",
+              text: "Create admin success",
               snackbar: true
             }
             commit('updateSnackbar', payload, {root: true})
@@ -70,13 +70,13 @@ export const key = {
         })
       })
     },
-    //edit key
-    editKey({commit}, data) {
+    //edit admin
+    editAdmin({commit}, data) {
       return new Promise((resolve, reject) => {
-        axios.patch(API_URL+'/keys/'+data.id, data.key).then(res => {
-          if(res.data.message === "edit key successfully") {
+        axios.patch(API_URL+'/admin/'+data.id, data.admin).then(res => {
+          if(res.data.message === "edit admin successfully") {
             let payload = {
-              text: "Edit key sucess",
+              text: "Edit admin success",
               snackbar: true
             }
             commit('updateSnackbar', payload, {root: true})
@@ -100,14 +100,14 @@ export const key = {
         })
       })
     },
-    //delete key
-    deleteKey({commit}, id) {
+    //delete admin
+    deleteAdmin({commit}, id) {
       return new Promise((resolve, reject) => {
-        axios.delete(API_URL+'/keys/'+id)
+        axios.delete(API_URL+'/admin/'+id)
         .then(res => {
-          if(res.data.message === "delete key successfully") {
+          if(res.data.message === "delete admin successfully") {
             let payload = {
-              text: "Delete key sucess",
+              text: "Delete admin success",
               snackbar: true
             }
             commit('updateSnackbar', payload, {root: true})
