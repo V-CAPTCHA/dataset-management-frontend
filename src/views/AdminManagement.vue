@@ -1,6 +1,8 @@
 <template>
   <div class="admin-management">     
     <div class="header">
+      <h3>Admin Management</h3>
+      
       <v-btn text color="#1a73e8" class="mb-2" @click="showCreateBox()">
         + CREATE ADMIN
         </v-btn>
@@ -146,13 +148,22 @@ export default {
   mounted() {
     this.getAllAdmin();
   },
+  created() {
+    if(!this.isSuperAdmin) 
+      this.$router.replace('/DatasetManagement')
+  },
+  computed: {
+    isSuperAdmin: function() {
+      return this.$store.getters.isSuperAdmin
+    }
+  }
 }
 </script>
 
 <style scoped>
 .header {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
 }
 
 thead {
