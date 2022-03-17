@@ -21,6 +21,10 @@
     metaInfo: {
       title: 'VCAPTCHA'
     },
+    created() {
+      //check super admin
+      this.$store.dispatch('checkSuperAdmin')
+    },
     computed: {
       isSuperAdmin: function() {
         return this.$store.getters.isSuperAdmin
