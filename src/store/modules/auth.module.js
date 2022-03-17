@@ -200,7 +200,22 @@ export const auth = {
           reject(err)
         })
       })
-    }
+    },
+    checkSuperAdmin({commit}) {
+      return new Promise((resolve, reject) => { 
+        //Check Super Admin
+        axios.get(API_URL+'/admin/all')
+        .then(res => {
+          commit('superActivate');
+          resolve(res)
+        })
+        .catch(err => {
+          if(err.response.data.message === 'Only super admin can get admin information') commit('superDeactivate');
+          else commit('superActivate');
+          reject(err)
+        })
+      })
+    } 
   },
   getters: {
     isLoggedIn: state => !!state.token,
