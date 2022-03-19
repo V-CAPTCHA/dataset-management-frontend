@@ -43,9 +43,9 @@ const routes = [
     ]
   },
   {
-    path: '/editprofile',
-    name: 'EditProfile',
-    component: () => import('../views/EditProfile')
+    path: '/changepassword',
+    name: 'ChangePassword',
+    component: () => import('../views/ChangePassword')
   },
   {
     path: '*',
