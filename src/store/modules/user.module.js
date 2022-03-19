@@ -77,7 +77,69 @@ export const user = {
           reject(err)
         })
       }
-    )}
+    )},
+    //edit User
+    editUser({commit}, data) {
+      return new Promise((resolve, reject) => {
+        axios.patch(API_URL+'/users/'+data.id, data.user).then(res => {
+          if(res.data.message === "change user information successfully") {
+            let payload = {
+              text: "Edit user success",
+              snackbar: true
+            }
+            commit('updateSnackbar', payload, {root: true})
+            resolve(res)
+          }
+          else {
+            let payload = {
+              text: "Something wrong please try again",
+              snackbar: true
+            }
+            commit('updateSnackbar', payload, {root: true})
+            reject(res.data.message)
+          }
+        }).catch(err => {
+          let payload = {
+            text: "Something wrong please try again",
+            snackbar: true
+          }
+          commit('updateSnackbar', payload, {root: true})
+          reject(err)
+        })
+      })
+    },
+    //delete User
+    deleteUser({commit}, id) {
+      return new Promise((resolve, reject) => {
+        axios.delete(API_URL+'/users/'+id)
+        .then(res => {
+          if(res.data.message === "delete user successfully") {
+            let payload = {
+              text: "Delete user success",
+              snackbar: true
+            }
+            commit('updateSnackbar', payload, {root: true})
+            resolve(res)
+          }
+          else {
+            let payload = {
+              text: "Something wrong please try again",
+              snackbar: true
+            }
+            commit('updateSnackbar', payload, {root: true})
+            reject(res.data.message)
+          }
+        })
+        .catch(err => {
+          let payload = {
+            text: "Something wrong please try again",
+            snackbar: true
+          }
+          commit('updateSnackbar', payload, {root: true})
+          reject(err)
+        })
+      })
+    }
   },
   getters: {
     userData: state => state.user
