@@ -27,7 +27,7 @@
             <td>{{ user.last_name }}</td>
             <td >
               <v-switch
-                color="#1a73e8" 
+                color="#66BB6A"
                 inset 
                 :input-value="user.email.split('::').length === 1"
                 @click="changeStatus(user.user_id)"
