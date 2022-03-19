@@ -18,15 +18,14 @@ export const user = {
     },
   },
   actions: {
-    //get user data
-    getUserData({commit}) {
+    //get all user data
+    getAllUser({commit}) {
       return new Promise((resolve, reject) => {
-        
         axios.get(API_URL+'/users')
         .then(res => {
-          if(res.data.message === "get user successfully") {
-            let userData = res.data.data;
-            resolve(userData);
+          if(res.data.message === "get all users successfully") {
+            let users = res.data.data;
+            resolve(users);
           }
           else {
             let payload = {
@@ -46,16 +45,15 @@ export const user = {
           reject(err)
         })
       })
-    },    
-    //change user data
-    changeUserData({commit}, user) {
+    },
+    //change status user
+    changeStatus({commit}, id) {
       return new Promise((resolve, reject) => {
-
-        axios.post(API_URL+'/users', user)
+        axios.put(API_URL+'/users/status/'+id)
         .then(res => {
-          if(res.data.message === "change first name and last name successfully") {
+          if(res.data.message === 'user has deactivated' || res.data.message === 'user has activate') {
             let payload = {
-              text: "Change your information success",
+              text: "Change status user success",
               snackbar: true
             }
             commit('updateSnackbar', payload, {root: true})
@@ -63,88 +61,23 @@ export const user = {
           }
           else {
             let payload = {
-              text: "Change your information failed",
+              text: "Something wrong please try again",
               snackbar: true
             }
             commit('updateSnackbar', payload, {root: true})
-            resolve(res.data.message)
+            reject(res.data.message)
           }
         })
         .catch(err => {
           let payload = {
-            text: "Change your information failed",
+            text: "Something wrong please try again",
             snackbar: true
           }
           commit('updateSnackbar', payload, {root: true})
           reject(err)
         })
-      })
-    },
-    //change password
-    changePassword({commit}, password) {
-      return new Promise((resolve, reject) => {
-
-        axios.post(API_URL+'/users/password', password)
-        .then(res => {
-          if(res.data.message === "change password successfully"){
-            let payload = {
-              text: "Change password success",
-              snackbar: true
-            }
-            commit('updateSnackbar', payload, {root: true})
-            resolve(res)
-          }
-          else {
-            let payload = {
-              text: "Change password failed",
-              snackbar: true
-            }
-            commit('updateSnackbar', payload, {root: true})
-            resolve(res.data.message)
-          }
-        })
-        .catch(err => {
-          let payload = {
-            text: "Change password failed",
-            snackbar: true
-          }
-          commit('updateSnackbar', payload, {root: true})
-          reject(err)
-        })
-      })
-    },
-    //delete account
-    deleteAccount({commit}) {
-      return new Promise((resolve, reject) => {
-        axios.delete(API_URL+'/users')
-        .then(res => {
-          if (res.data.message === "delete account successfully") {
-            let payload = {
-              text: "Delete account sucess",
-              snackbar: true
-            }
-            commit('updateSnackbar', payload, {root: true})
-            resolve.apply(res)
-          }
-          else {
-            let payload = {
-              text: "Delete account failed",
-              snackbar: true
-            }
-            commit('updateSnackbar', payload, {root: true})
-            resolve(res.data.message)
-          }
-        })
-        .catch(err => {
-          let payload = {
-            text: "Delete account failed",
-            snackbar: true
-          }
-          commit('updateSnackbar', payload, {root: true})
-          reject(err)
-        })
-      })
-    }
+      }
+    )}
   },
   getters: {
     userData: state => state.user
