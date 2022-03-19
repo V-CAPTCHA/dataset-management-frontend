@@ -43,10 +43,10 @@
 
                 <v-list>
                   <v-list-item>
-                    <v-btn plain color="#1a73e8" @click="showEditBox(admin.admin_id, admin.email,admin.first_name, admin.last_name)">Edit</v-btn>
+                    <v-btn plain color="#1a73e8" @click="showEditBox(user.user_id, user.email,user.first_name, user.last_name)">Edit</v-btn>
                   </v-list-item>
                   <v-list-item>
-                    <v-btn plain color="red" @click="deleteAdmin(admin.admin_id)">Delete</v-btn>
+                    <v-btn plain color="red" @click="deleteUser(user.user_id)">Delete</v-btn>
                   </v-list-item>
                 </v-list>
               </v-menu>         
@@ -65,19 +65,42 @@
         </tbody>
       </template>
     </v-simple-table>
+
+    <!-- Edit user -->
+    <UserForm 
+      title="Edit User" 
+      v-if="editBoxIsShow" 
+      :isEdit="true"
+      :cancel="closeEditBox"
+      :user_id="user_id"
+      :user_email="email"
+      :user_first_name="first_name" 
+      :user_last_name="last_name" 
+    />
   </div>
 </template>
 
 
 <script>
+import UserForm from '../components/UserForm.vue';
+
 export default {
   name: 'ManageUser',
   metaInfo: {
     title: 'Manage User | VCAPTCHA '
   },
+  components: {
+    UserForm,
+  },
   data() {
     return {
-      users: false
+      user_id: '',
+      email: '',
+      first_name: '',
+      last_name: '',
+      createBoxIsShow: false,
+      editBoxIsShow: false,
+      users: []
     }
   },
   methods: {
@@ -92,10 +115,33 @@ export default {
         }
       })
     },
+    showCreateBox: function() {
+      this.createBoxIsShow = true;
+    },
+    closeCreateBox: function() {
+      this.createBoxIsShow = false;
+    },
+    showEditBox: function(user_id, email, first_name, last_name) {
+      this.user_id = user_id;
+      this.email = email;
+      this.first_name = first_name;
+      this.last_name = last_name;
+      this.editBoxIsShow = true;
+    },
+    closeEditBox: function() {
+      this.editBoxIsShow = false;
+    },
+    confirmCreate: function() {
+      console.log('create');
+    },
     changeStatus: function(id) {
       this.$store.dispatch('changeStatus', id)
       .then(() => this.getAllUser())
-    }
+    },
+    deleteUser: function(id) {
+      this.$store.dispatch('deleteUser', id)
+      .then(() => this.getAllUser())
+    },
   },
   beforeUpdate() {
     this.getAllUser();
@@ -103,15 +149,6 @@ export default {
   mounted() {
     this.getAllUser();
   },
-  created() {
-    if(!this.isSuperAdmin) 
-      this.$router.replace('/DatasetManagement')
-  },
-  computed: {
-    isSuperAdmin: function() {
-      return this.$store.getters.isSuperAdmin
-    }
-  }
 }
 </script>
 
