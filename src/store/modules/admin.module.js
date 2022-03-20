@@ -136,7 +136,7 @@ export const admin = {
     editAdmin({commit}, data) {
       return new Promise((resolve, reject) => {
         axios.patch(API_URL+'/admin/'+data.id, data.admin).then(res => {
-          if(res.data.message === "edit admin successfully") {
+          if(res.data.message === "change first name and last name successfully") {
             let payload = {
               text: "Edit admin success",
               snackbar: true

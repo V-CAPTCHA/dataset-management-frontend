@@ -8,6 +8,7 @@
       <v-card-text>
         <!-- Email -->
         <v-text-field
+          v-if="isCreate"
           id="email"
           v-model="email"
           label="Email"
@@ -16,6 +17,23 @@
           required
           outlined
           dense
+        ></v-text-field>
+
+        <!-- Email for edit form -->
+        <v-text-field
+          v-if="isEdit"
+          id="email"
+          v-model="email"
+          label="Email"
+          :rules="[rules.required]"
+          counter="50"
+          required
+          outlined
+          dense
+          disabled
+          hint="*Admin's email cannot be edited"
+          persistent-hint
+          class="mb-2"
         ></v-text-field>
 
         <!-- First Name -->
