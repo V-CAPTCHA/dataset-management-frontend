@@ -21,8 +21,20 @@
             </template>
 
             <v-list>
+              <v-list-item v-if="isSuperAdmin">
+                <v-btn plain :to="{name: 'Dashboard'}">Dashboard</v-btn>
+              </v-list-item>
+              <v-list-item v-if="isSuperAdmin">
+                <v-btn plain :to="{name: 'AdminManagement'}">Admin Management</v-btn>
+              </v-list-item>
               <v-list-item>
-                <v-btn plain :to="{name: 'Dashboard'}">Change Password</v-btn> <!-- ***must replace to Password change module*** -->
+                <v-btn plain :to="{name: 'DatasetManagement'}">Dataset Management</v-btn>
+              </v-list-item>
+              <v-list-item>
+                <v-btn plain :to="{name: 'ManageUser'}">Manage User</v-btn>
+              </v-list-item>
+              <v-list-item>
+                <v-btn plain :to="{name: 'ChangePassword'}">Change Password</v-btn>
               </v-list-item>
               <v-list-item>
                 <v-btn text plain @click="logOut()">Logout</v-btn>
@@ -56,6 +68,18 @@
           </div>
 
           <div v-else>
+            <v-list-item v-if="isSuperAdmin" :to="{name: 'Dashboard'}">
+              <v-list-item-title>Dashboard</v-list-item-title>
+            </v-list-item>
+            <v-list-item v-if="isSuperAdmin" :to="{name: 'AdminManagement'}">
+              <v-list-item-title>Admin Management</v-list-item-title>
+            </v-list-item>
+            <v-list-item :to="{name: 'DatasetManagement'}">
+              <v-list-item-title>Dataset Management</v-list-item-title>
+            </v-list-item>
+            <v-list-item :to="{name: 'ManageUser'}">
+              <v-list-item-title>Manage User</v-list-item-title>
+            </v-list-item>
             <v-list-item :to="{name: 'ChangePassword'}">
               <v-list-item-title>Change Password</v-list-item-title>
             </v-list-item>
@@ -97,12 +121,19 @@ export default {
       this.$router.replace('/login')
     }
   },
+  created() {
+      //check super admin
+      this.$store.dispatch('checkSuperAdmin')
+    },
   computed: {
     isLoggedIn: function() {
       return this.$store.getters.isLoggedIn
     },
     isLoading: function() {
       return this.$store.getters.authStatus === 'loading'
+    },
+    isSuperAdmin: function() {
+      return this.$store.getters.isSuperAdmin
     }
   },
   watch: {
