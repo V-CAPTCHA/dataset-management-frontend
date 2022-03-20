@@ -37,6 +37,68 @@ export const admin = {
         })
       }) 
     },
+    //get admin data 
+    getAdminData({commit}) {
+      return new Promise((resolve, reject) => {
+        
+        axios.get(API_URL+'/admin')
+        .then(res => {
+          if(res.data.message === "get admin successfully") {
+            let userData = res.data.data;
+            resolve(userData);
+          }
+          else {
+            let payload = {
+              text: "Something wrong please try again",
+              snackbar: true
+            }
+            commit('updateSnackbar', payload, {root: true})
+            reject(res.data.message);
+          }
+        })
+        .catch(err => {
+          let payload = {
+            text: "Something wrong please try again",
+            snackbar: true
+          }
+          commit('updateSnackbar', payload, {root: true})
+          reject(err)
+        })
+      })
+    },
+    //change password
+    changePassword({commit}, password) {
+      return new Promise((resolve, reject) => {
+
+        axios.put(API_URL+'/admin/password', password)
+        .then(res => {
+          if(res.data.message === "change password successfully"){
+            let payload = {
+              text: "Change password success",
+              snackbar: true
+            }
+            commit('updateSnackbar', payload, {root: true})
+            resolve(res)
+          }
+          else {
+            let payload = {
+              text: "Change password failed",
+              snackbar: true
+            }
+            commit('updateSnackbar', payload, {root: true})
+            resolve(res.data.message)
+          }
+        })
+        .catch(err => {
+          let payload = {
+            text: "Change password failed",
+            snackbar: true
+          }
+          commit('updateSnackbar', payload, {root: true})
+          reject(err)
+        })
+      })
+    },
     //create admin
     createAdmin({commit}, admin) {
       return new Promise((resolve, reject) => {
