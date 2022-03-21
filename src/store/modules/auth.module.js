@@ -6,6 +6,7 @@ export const auth = {
   state: {
     status: '',
     token: localStorage.getItem('token') || '',
+    isSuper: false,
   },
   mutations: {
     auth_request(state) {
@@ -22,13 +23,18 @@ export const auth = {
       state.status = ''
       state.token = ''
     },
+    superActivate(state) {
+      state.isSuper = true
+    },
+    superDeactivate(state) {
+      state.isSuper = false
+    },
   },
   actions: {
     //Login
     login({commit}, user) {
       return new Promise((resolve, reject) => {
         commit('auth_request')
-
         axios.post(API_URL+'/login', user)
         .then((res) => {
           if(res.data.message === 'authorization successfully') {
@@ -43,6 +49,17 @@ export const auth = {
             }
             commit('updateSnackbar', payload, {root: true})
             commit('auth_success', token)
+
+            //Check Super Admin
+            axios.get(API_URL+'/admin/all')
+            .then(res => {
+              commit('superActivate');
+            })
+            .catch(err => {
+              if(err.response.data.message === 'Only super admin can get admin information') commit('superDeactivate');
+              else commit('superActivate');
+            })
+
             resolve(res)
           }
           else {
@@ -182,10 +199,26 @@ export const auth = {
           reject(err)
         })
       })
-    }
+    },
+    checkSuperAdmin({commit}) {
+      return new Promise((resolve, reject) => { 
+        //Check Super Admin
+        axios.get(API_URL+'/admin/all')
+        .then(res => {
+          commit('superActivate');
+          resolve(res)
+        })
+        .catch(err => {
+          if(err.response.data.message === 'Only super admin can get admin information') commit('superDeactivate');
+          else commit('superActivate');
+          reject(err)
+        })
+      })
+    } 
   },
   getters: {
     isLoggedIn: state => !!state.token,
     authStatus: state => state.status,
+    isSuperAdmin: state => state.isSuper,
   }
 }

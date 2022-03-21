@@ -21,8 +21,20 @@
             </template>
 
             <v-list>
+              <v-list-item v-if="isSuperAdmin">
+                <v-btn plain :to="{name: 'Dashboard'}">Dashboard</v-btn>
+              </v-list-item>
+              <v-list-item v-if="isSuperAdmin">
+                <v-btn plain :to="{name: 'AdminManagement'}">Admin Management</v-btn>
+              </v-list-item>
               <v-list-item>
-                <v-btn plain :to="{name: 'Dashboard'}">Password change</v-btn> <!-- ***must replace to Password change module*** -->
+                <v-btn plain :to="{name: 'DatasetManagement'}">Dataset Management</v-btn>
+              </v-list-item>
+              <v-list-item>
+                <v-btn plain :to="{name: 'ManageUser'}">Manage User</v-btn>
+              </v-list-item>
+              <v-list-item>
+                <v-btn plain :to="{name: 'ChangePassword'}">Change Password</v-btn>
               </v-list-item>
               <v-list-item>
                 <v-btn text plain @click="logOut()">Logout</v-btn>
@@ -49,37 +61,27 @@
           v-model="group"
           active-class="blue--text text--accent-4"
         >
-          <v-list-item :to="{name: 'Home'}">
-            <v-list-item-title >Home</v-list-item-title>
-          </v-list-item>
-
-          <v-list-item :to="{name: 'Guide'}">
-            <v-list-item-title>Guide</v-list-item-title>
-          </v-list-item>
-
-          <v-list-item href="https://github.com/V-CAPTCHA" target="_blank">
-            <v-list-item-title>Github <v-icon aria-hidden="false">mdi-github</v-icon></v-list-item-title>
-          </v-list-item>
-
           <div v-if="!isLoggedIn">
             <v-list-item :to="{name: 'Login'}">
               <v-list-item-title>Login</v-list-item-title>
             </v-list-item>
-
-            <v-list-item :to="{name: 'Register'}">
-              <v-list-item-title>Register</v-list-item-title>
-            </v-list-item>
           </div>
 
           <div v-else>
-            <v-list-item :to="{name: 'Dashboard'}">
+            <v-list-item v-if="isSuperAdmin" :to="{name: 'Dashboard'}">
               <v-list-item-title>Dashboard</v-list-item-title>
             </v-list-item>
-            <v-list-item :to="{name: 'KeyManagement'}">
-              <v-list-item-title>Key Management</v-list-item-title>
+            <v-list-item v-if="isSuperAdmin" :to="{name: 'AdminManagement'}">
+              <v-list-item-title>Admin Management</v-list-item-title>
             </v-list-item>
-            <v-list-item :to="{name: 'EditProfile'}">
-              <v-list-item-title>Edit Profile</v-list-item-title>
+            <v-list-item :to="{name: 'DatasetManagement'}">
+              <v-list-item-title>Dataset Management</v-list-item-title>
+            </v-list-item>
+            <v-list-item :to="{name: 'ManageUser'}">
+              <v-list-item-title>Manage User</v-list-item-title>
+            </v-list-item>
+            <v-list-item :to="{name: 'ChangePassword'}">
+              <v-list-item-title>Change Password</v-list-item-title>
             </v-list-item>
             <v-list-item @click="logOut()">
               <v-list-item-title>Logout</v-list-item-title>
@@ -119,12 +121,19 @@ export default {
       this.$router.replace('/login')
     }
   },
+  created() {
+      //check super admin
+      this.$store.dispatch('checkSuperAdmin')
+    },
   computed: {
     isLoggedIn: function() {
       return this.$store.getters.isLoggedIn
     },
     isLoading: function() {
       return this.$store.getters.authStatus === 'loading'
+    },
+    isSuperAdmin: function() {
+      return this.$store.getters.isSuperAdmin
     }
   },
   watch: {
