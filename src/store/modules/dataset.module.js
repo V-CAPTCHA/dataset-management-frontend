@@ -27,8 +27,8 @@ export const dataset = {
             
             resolve(dataset);
           }
-          if(res.data.message === "dataset does not exist"){
-            resolve("dataset does not exist")
+          if(res.data.message === "Dataset does not exist"){
+            resolve("Dataset does not exist")
           }
         })
         .catch(err => {
