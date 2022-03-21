@@ -137,9 +137,10 @@ export default {
   },
   methods: {
     getAllDataset: function() {
+      console.log(this.datasets)
       this.$store.dispatch('getAllDataset').then((dataset) => {
         if (dataset === 'Dataset does not exist') {
-          this.datasets = [];
+          this.datasets = null;
         } else {
           this.datasets = dataset;
         }
