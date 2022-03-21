@@ -1,9 +1,9 @@
 <template>
-  <div class="dataset-management">     
+  <div class="dataset-management">
     <div class="header">
       <v-btn text color="#1a73e8" class="mb-2" @click="showCreateBox()">
         + CREATE DATASET
-        </v-btn>
+      </v-btn>
     </div>
 
     <v-simple-table>
@@ -18,24 +18,33 @@
             <th class="text-left" style="color: white;"></th>
           </tr>
         </thead>
-        
+
         <!-- Body -->
         <tbody v-if="!!datasets">
           <tr v-for="dataset in datasets" :key="dataset.dataset_id">
             <td>{{ dataset.dataset_id }}</td>
             <td>
-          <v-img
-  max-width="80"
-  v-bind:src=datasetAPI+dataset.dataset_img
-></v-img>  
-
-
+              <v-img
+                max-width="80"
+                v-bind:src="datasetAPI + dataset.dataset_img"
+              ></v-img>
             </td>
             <td>{{ dataset.dataset_question }}</td>
-            <td><v-chip  class="mr-1" color="blue" link outlined pill v-for=" datasets in dataset.dataset_reply" :key="datasets.dataset_reply" >{{datasets}}</v-chip></td>
+            <td>
+              <v-chip
+                class="mr-1"
+                color="blue"
+                link
+                outlined
+                pill
+                v-for="datasets in dataset.dataset_reply"
+                :key="datasets.dataset_reply"
+                >{{ datasets }}</v-chip
+              >
+            </td>
             <td>
               <v-menu offset-y>
-                <template v-slot:activator="{ on, attrs}">
+                <template v-slot:activator="{ on, attrs }">
                   <v-btn icon text v-on="on" v-bind="attrs">
                     <v-icon>mdi-dots-vertical</v-icon>
                   </v-btn>
@@ -43,13 +52,30 @@
 
                 <v-list>
                   <v-list-item>
-                    <v-btn plain color="#1a73e8" @click="showEditBox(dataset.dataset_id,dataset.dataset_img,dataset.dataset_question,dataset.dataset_reply)">Edit</v-btn>
+                    <v-btn
+                      plain
+                      color="#1a73e8"
+                      @click="
+                        showEditBox(
+                          dataset.dataset_id,
+                          dataset.dataset_img,
+                          dataset.dataset_question,
+                          dataset.dataset_reply
+                        )
+                      "
+                      >Edit</v-btn
+                    >
                   </v-list-item>
                   <v-list-item>
-                    <v-btn plain color="red" @click="deleteDataset(dataset.dataset_id)">Delete</v-btn>
+                    <v-btn
+                      plain
+                      color="red"
+                      @click="deleteDataset(dataset.dataset_id)"
+                      >Delete</v-btn
+                    >
                   </v-list-item>
                 </v-list>
-              </v-menu>         
+              </v-menu>
             </td>
           </tr>
         </tbody>
@@ -66,35 +92,33 @@
     </v-simple-table>
 
     <!-- Create key -->
-    <DatasetForm 
-      title="Create Dataset" 
-      v-if="createBoxIsShow" 
+    <DatasetForm
+      title="Create Dataset"
+      v-if="createBoxIsShow"
       :isCreate="true"
-      :cancel="closeCreateBox" 
+      :cancel="closeCreateBox"
     />
 
     <!-- Edit key -->
-    <DatasetForm 
-      title="Edit Dataset" 
-      v-if="editBoxIsShow" 
+    <DatasetForm
+      title="Edit Dataset"
+      v-if="editBoxIsShow"
       :isEdit="true"
       :cancel="closeEditBox"
       :dataset_id="id"
-      :dataset_img="img" 
+      :dataset_img="img"
       :dataset_question="question"
       :dataset_reply="reply"
     />
-
   </div>
 </template>
 
 <script>
-
 import DatasetForm from '../components/DatasetForm.vue';
 export default {
   name: 'DatasetManagement',
   metaInfo: {
-    title: 'Dataset Management | VCAPTCHA '
+    title: 'Dataset Management | VCAPTCHA ',
   },
   components: {
     DatasetForm,
@@ -108,20 +132,18 @@ export default {
       datasets: [],
       createBoxIsShow: false,
       editBoxIsShow: false,
-      datasetAPI:process.env.VUE_APP_DATASET_URL
-    }
+      datasetAPI: process.env.VUE_APP_DATASET_URL,
+    };
   },
   methods: {
     getAllDataset: function() {
-      this.$store.dispatch('getAllDataset')
-      .then((dataset) => {
-        if(dataset === "Dataset does not exist") {
+      this.$store.dispatch('getAllDataset').then((dataset) => {
+        if (dataset === 'Dataset does not exist') {
           this.datasets = [];
+        } else {
+          this.datasets = dataset;
         }
-        else {
-          this.datasets = dataset
-        }
-      })
+      });
     },
     showCreateBox: function() {
       this.createBoxIsShow = true;
@@ -143,9 +165,9 @@ export default {
       console.log('create');
     },
     deleteDataset(id) {
-      this.$store.dispatch('deleteDataset', id)
-      .then(() => this.getAllDataset())
-      
+      this.$store
+        .dispatch('deleteDataset', id)
+        .then(() => this.getAllDataset());
     },
   },
   beforeUpdate() {
@@ -154,7 +176,7 @@ export default {
   mounted() {
     this.getAllDataset();
   },
-}
+};
 </script>
 
 <style scoped>
