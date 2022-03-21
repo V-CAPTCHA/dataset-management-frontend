@@ -4,6 +4,7 @@ import { auth } from './modules/auth.module.js'
 import { user } from './modules/user.module.js'
 import { admin } from './modules/admin.module.js'
 import { dashboard } from './modules/dashboard.module'
+import { dataset } from './modules/dataset.module'
 
 Vue.use(Vuex)
 
@@ -12,7 +13,8 @@ export default new Vuex.Store({
     auth,
     user,
     admin,
-    dashboard
+    dashboard,
+    dataset,
   },
   state: {
     snackbar: false,
