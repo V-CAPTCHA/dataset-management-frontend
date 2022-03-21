@@ -80,13 +80,13 @@ export default {
       }
       this.$store.dispatch('login', data)
       .then(() => {      
-        this.$router.replace('/DatasetManagement')
+        this.$router.replace('/dashboard')
       })
     }
   },
   created() {
     if(this.$store.getters.isLoggedIn) {
-      this.$router.replace('/DatasetManagement')
+      this.$router.replace('/dashboard')
     }
   },
   computed: {
