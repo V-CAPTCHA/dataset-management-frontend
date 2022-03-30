@@ -40,6 +40,7 @@ const routes = [
         name: 'ManageUser',
         component: () => import('../views/ManageUser.vue')
       }
+      
     ]
   },
   {
