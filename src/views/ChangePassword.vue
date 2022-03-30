@@ -1,45 +1,33 @@
 <template>
-  <div class="editProfile">
+  <div class="changePassword">
     <v-card outlined elevation="0" width="720" class="mx-auto pb-6">
-      <!--Edit Profile-->
-      <v-form>
-        <v-container>
-          <h3 class="mb-3">Edit Profile</h3>
-          <!--Text Field-->
-          <v-text-field
-            id="firstName"
-            v-model="firstName"
-            :rules="[rules.required]"
-            label="First Name"
-            counter="50"
-            outlined
-            dense
-            type="text"
-          ></v-text-field>
+      <!-- Profile -->
+      <v-container>
+        <h3 class="mb-3">Profile</h3>
+        <p class="text-caption" id="name-hint">
+          *Admin's first name and last name cannot be edited
+        </p>
 
-          <v-text-field
-            id="lastName"
-            v-model="lastName"
-            :rules="[rules.required]"
-            label="Last Name"
-            counter="50"
-            outlined
-            dense
-            type="text"
-          ></v-text-field>
+        <v-text-field
+          id="firstName"
+          v-model="firstName"
+          label="First Name"
+          outlined
+          dense
+          disabled
+        ></v-text-field>
 
-          <div class="buttonContainer">
-            <!-- Save information btn -->
-            <v-btn
-              class="saveBtn" 
-              color="#1a73e8" 
-              depressed dark
-              @click="changeUserData()"
-            >Save</v-btn>
-          </div>
-        </v-container>
-      </v-form>
+        <v-text-field
+          id="lastName"
+          v-model="lastName"
+          label="Last Name"
+          outlined
+          dense
+          disabled
+        ></v-text-field>
 
+      </v-container>
+      
       <!--Change Password-->
       <v-form>
         <v-container>
@@ -95,23 +83,6 @@
           </div>
         </v-container>
       </v-form>
-
-      <!--Delete Account-->
-      <v-form>
-        <v-container>
-          <h3 class="mb-3">Delete Account</h3>
-          <span>Click on delete button </span>
-
-          <!-- Delete account btn -->
-          <v-btn
-            class="ml-2"
-            id="cancelBtn" 
-            color="red" 
-            depressed dark
-            @click="deleteAccount()"
-          >Delete</v-btn>
-        </v-container>
-      </v-form>
     </v-card>
   </div>
 </template>
@@ -145,14 +116,6 @@
       }
     },
     methods: {
-      //Change user data
-      changeUserData: function() {
-        const user = {
-          first_name: this.firstName,
-          last_name: this.lastName,
-        }
-        this.$store.dispatch('changeUserData', user)
-      },
       //Change password
       changePassword: function() {
         const password = {
@@ -166,22 +129,14 @@
           this.confirmationPassword = ''
         })
       },
-      //Delete account
-      deleteAccount: function() {
-        this.$store.dispatch('deleteAccount')
-        .then(() => {
-          this.$store.dispatch("logout")
-          this.$router.replace('/login')
-        })
-      },
     },
     created() {
       if(!this.$store.getters.isLoggedIn) {
         this.$router.replace('/login')
       }
 
-      //Get user data on created
-      this.$store.dispatch('getUserData')
+      //Get admin data on created
+      this.$store.dispatch('getAdminData')
       .then((user) => {
         this.firstName = user.first_name;
         this.lastName = user.last_name;
@@ -197,12 +152,22 @@
 
 
 <style scope>
-.editProfile h3 {
+.changePassword h3 {
   border-bottom: 1px solid lightgrey;
 }
 
 .buttonContainer {
   display: flex;
   justify-content: flex-end;
+}
+
+#name-hint {
+  color: gray;
+  margin-bottom: 1rem;
+  cursor: context-menu;
+}
+
+#firstName:hover, #lastName:hover {
+  cursor: context-menu;
 }
 </style>

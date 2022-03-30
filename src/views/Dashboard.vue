@@ -147,26 +147,31 @@ export default {
     }
   },
   created() {
-    //Get total request
-    this.$store.dispatch("getTotalRequest")
-    .then(data => {
-      this.totalRequest = data.totalRequest;
-      this.totalRequestArray = data.totalRequestPerDay;
-    })
+    if(!this.isSuperAdmin) 
+      this.$router.replace('/DatasetManagement')
+    
+    else { 
+      //Get total request
+      this.$store.dispatch("getTotalRequest")
+      .then(data => {
+        this.totalRequest = data.totalRequest;
+        this.totalRequestArray = data.totalRequestPerDay;
+      })
 
-    //Get valid reqeust
-    this.$store.dispatch("getValidRequest")
-    .then(data => {
-      this.validRequest = data.validPercent;
-      this.totalValidRequestArray = data.validRequestPerDay;
-    })
+      //Get valid reqeust
+      this.$store.dispatch("getValidRequest")
+      .then(data => {
+        this.validRequest = data.validPercent;
+        this.totalValidRequestArray = data.validRequestPerDay;
+      })
 
-    //Get invalid request
-    this.$store.dispatch("getInvalidRequest")
-    .then(data => {
-      this.invalidRequest = data.invalidPercent;
-      this.totalInvalidRequestArray = data.invalidRequestPerDay;
-    })
+      //Get invalid request
+      this.$store.dispatch("getInvalidRequest")
+      .then(data => {
+        this.invalidRequest = data.invalidPercent;
+        this.totalInvalidRequestArray = data.invalidRequestPerDay;
+      })
+    }
   },
   computed: {
     isTotalRequestLoading: function() {
@@ -178,6 +183,10 @@ export default {
     isInvalidRequestLoading: function() {
       return this.$store.getters.invalidRequestStatus === 'loading';
     },
+    isSuperAdmin: function() {
+      return this.$store.getters.isSuperAdmin
+    }
+    
   }
 }
 </script>

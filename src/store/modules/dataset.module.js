@@ -3,28 +3,32 @@ import axios from "axios"
 const API_URL = process.env.VUE_APP_API_URL
 
 
-export const key = {
+export const dataset = {
   state: {
-    key: []
+    dataset: []
   },
   mutations: {
-    key_success(state, key) {
-      state.key = key
+    key_success(state, dataset) {
+      state.dataset = dataset
     }
   },
   actions: {
     //get all key
-    getAllKey({commit}) {
+    getAllDataset({commit}) {
       return new Promise((resolve, reject) => {
-
-        axios.get(API_URL+'/keys')
+        
+        axios.get(API_URL+'/dataset')
         .then(res => {
-          if(res.data.message === "get all keys successfully") {
-            let keys = res.data.data;
-            resolve(keys);
+          if(res.data.message === "get all dataset successfully") {
+            let dataset = res.data.data;
+            for(let i = 0; i < dataset.length; i++){
+              dataset[i].dataset_reply = dataset[i].dataset_reply.split(",");
+            }
+            
+            resolve(dataset);
           }
-          if(res.data.message === "key does not exist"){
-            resolve("key does not exist")
+          if(res.data.message === "Dataset does not exist"){
+            resolve("Dataset does not exist")
           }
         })
         .catch(err => {
@@ -38,14 +42,17 @@ export const key = {
       }) 
     },
     //create key
-    createKey({commit}, key) {
+    createDataset({commit}, dataset) {
       return new Promise((resolve, reject) => {
-
-        axios.post(API_URL+'/keys', key)
+        axios.post(API_URL+'/dataset', dataset ,{
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
+        })
         .then(res => {
-          if(res.data.message === "create key successfully") {
+          if(res.data.message === "create dataset successfully") {
             let payload = {
-              text: "Create key sucess",
+              text: "Create dataset sucess",
               snackbar: true
             }
             commit('updateSnackbar', payload, {root: true})
@@ -71,10 +78,11 @@ export const key = {
       })
     },
     //edit key
-    editKey({commit}, data) {
+    editDataset({commit}, data) {
       return new Promise((resolve, reject) => {
-        axios.patch(API_URL+'/keys/'+data.id, data.key).then(res => {
-          if(res.data.message === "edit key successfully") {
+        axios.patch(API_URL+'/dataset/'+data.get('id'), data).then(res => {
+          console.log(data)
+          if(res.data.message === "edit dataset successfully") {
             let payload = {
               text: "Edit key sucess",
               snackbar: true
@@ -101,13 +109,13 @@ export const key = {
       })
     },
     //delete key
-    deleteKey({commit}, id) {
+    deleteDataset({commit}, id) {
       return new Promise((resolve, reject) => {
-        axios.delete(API_URL+'/keys/'+id)
+        axios.delete(API_URL+'/dataset/'+id)
         .then(res => {
-          if(res.data.message === "delete key successfully") {
+          if(res.data.message === "delete dataset successfully") {
             let payload = {
-              text: "Delete key sucess",
+              text: "Delete dataset sucess",
               snackbar: true
             }
             commit('updateSnackbar', payload, {root: true})

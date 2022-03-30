@@ -18,15 +18,14 @@ export const user = {
     },
   },
   actions: {
-    //get user data
-    getUserData({commit}) {
+    //get all user data
+    getAllUser({commit}) {
       return new Promise((resolve, reject) => {
-        
         axios.get(API_URL+'/users')
         .then(res => {
-          if(res.data.message === "get user successfully") {
-            let userData = res.data.data;
-            resolve(userData);
+          if(res.data.message === "get all users successfully") {
+            let users = res.data.data;
+            resolve(users);
           }
           else {
             let payload = {
@@ -46,16 +45,15 @@ export const user = {
           reject(err)
         })
       })
-    },    
-    //change user data
-    changeUserData({commit}, user) {
+    },
+    //change status user
+    changeStatus({commit}, id) {
       return new Promise((resolve, reject) => {
-
-        axios.post(API_URL+'/users', user)
+        axios.put(API_URL+'/users/status/'+id)
         .then(res => {
-          if(res.data.message === "change first name and last name successfully") {
+          if(res.data.message === 'user has deactivated' || res.data.message === 'user has activate') {
             let payload = {
-              text: "Change your information success",
+              text: "Change status user success",
               snackbar: true
             }
             commit('updateSnackbar', payload, {root: true})
@@ -63,32 +61,30 @@ export const user = {
           }
           else {
             let payload = {
-              text: "Change your information failed",
+              text: "Something wrong please try again",
               snackbar: true
             }
             commit('updateSnackbar', payload, {root: true})
-            resolve(res.data.message)
+            reject(res.data.message)
           }
         })
         .catch(err => {
           let payload = {
-            text: "Change your information failed",
+            text: "Something wrong please try again",
             snackbar: true
           }
           commit('updateSnackbar', payload, {root: true})
           reject(err)
         })
-      })
-    },
-    //change password
-    changePassword({commit}, password) {
+      }
+    )},
+    //edit User
+    editUser({commit}, data) {
       return new Promise((resolve, reject) => {
-
-        axios.post(API_URL+'/users/password', password)
-        .then(res => {
-          if(res.data.message === "change password successfully"){
+        axios.patch(API_URL+'/users/'+data.id, data.user).then(res => {
+          if(res.data.message === "change user information successfully") {
             let payload = {
-              text: "Change password success",
+              text: "Edit user success",
               snackbar: true
             }
             commit('updateSnackbar', payload, {root: true})
@@ -96,16 +92,15 @@ export const user = {
           }
           else {
             let payload = {
-              text: "Change password failed",
+              text: "Something wrong please try again",
               snackbar: true
             }
             commit('updateSnackbar', payload, {root: true})
-            resolve(res.data.message)
+            reject(res.data.message)
           }
-        })
-        .catch(err => {
+        }).catch(err => {
           let payload = {
-            text: "Change password failed",
+            text: "Something wrong please try again",
             snackbar: true
           }
           commit('updateSnackbar', payload, {root: true})
@@ -113,31 +108,31 @@ export const user = {
         })
       })
     },
-    //delete account
-    deleteAccount({commit}) {
+    //delete User
+    deleteUser({commit}, id) {
       return new Promise((resolve, reject) => {
-        axios.delete(API_URL+'/users')
+        axios.delete(API_URL+'/users/'+id)
         .then(res => {
-          if (res.data.message === "delete account successfully") {
+          if(res.data.message === "delete user successfully") {
             let payload = {
-              text: "Delete account sucess",
+              text: "Delete user success",
               snackbar: true
             }
             commit('updateSnackbar', payload, {root: true})
-            resolve.apply(res)
+            resolve(res)
           }
           else {
             let payload = {
-              text: "Delete account failed",
+              text: "Something wrong please try again",
               snackbar: true
             }
             commit('updateSnackbar', payload, {root: true})
-            resolve(res.data.message)
+            reject(res.data.message)
           }
         })
         .catch(err => {
           let payload = {
-            text: "Delete account failed",
+            text: "Something wrong please try again",
             snackbar: true
           }
           commit('updateSnackbar', payload, {root: true})
