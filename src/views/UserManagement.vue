@@ -21,7 +21,26 @@
     metaInfo: {
       title: 'VCAPTCHA'
     },
-    created() {
+    beforeUpdate() {
+      //check expire token
+      this.$store.dispatch('checkTokenExp')
+      .catch(err => {
+        if(err === "expired") {
+          this.$store.dispatch('logout')
+          this.$router.replace('/login')
+        }
+      })
+    },
+    mounted() {
+      //check expire token
+      this.$store.dispatch('checkTokenExp')
+      .catch(err => {
+        if(err === "expired") {
+          this.$store.dispatch('logout')
+          this.$router.replace('/login')
+        }
+      })
+
       //check super admin
       this.$store.dispatch('checkSuperAdmin')
     },
