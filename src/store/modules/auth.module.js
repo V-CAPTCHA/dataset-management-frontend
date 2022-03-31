@@ -69,6 +69,11 @@ export const auth = {
         })
         .catch((err) => {
           commit('auth_error')
+          let payload = {
+            text: err.response.data.errors[0].msg,
+            snackbar: true
+          }
+          commit('updateSnackbar', payload, {root: true})
           reject(err)
         })
       })
