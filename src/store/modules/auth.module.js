@@ -69,8 +69,15 @@ export const auth = {
         })
         .catch((err) => {
           commit('auth_error')
+          
+          var err_text = 'Something went wrong'
+          
+          console.log(err.response.data.errors)
+          if (err.response.data.errors != undefined){err_text= err.response.data.errors[0].msg}else{
+            err_text= err.response.data.message
+          }
           let payload = {
-            text: err.response.data.errors[0].msg,
+            text: err_text,
             snackbar: true
           }
           commit('updateSnackbar', payload, {root: true})
