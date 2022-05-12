@@ -131,6 +131,15 @@
       },
     },
     created() {
+      //check expire token
+      this.$store.dispatch('checkTokenExp')
+      .catch(err => {
+        if(err === "expired") {
+          this.$store.dispatch('logout')
+          this.$router.replace('/login')
+        }
+      })
+
       if(!this.$store.getters.isLoggedIn) {
         this.$router.replace('/login')
       }

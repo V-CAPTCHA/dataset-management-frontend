@@ -28,7 +28,7 @@ export const auth = {
     },
     superDeactivate(state) {
       state.isSuper = false
-    },
+    }
   },
   actions: {
     //Login
@@ -209,12 +209,25 @@ export const auth = {
           resolve(res)
         })
         .catch(err => {
-          if(err.response.data.message === 'Only super admin can get admin information') commit('superDeactivate');
-          else commit('superActivate');
+          if(err.response.data.message === 'Only super admin can get admin information') commit('superDeactivate');          else commit('superActivate');
           reject(err)
         })
       })
-    } 
+    },
+    checkTokenExp({commit}) {
+      return new Promise((resolve, reject) => { 
+        //Check Super Admin
+        axios.get(API_URL+'/admin')
+        .then(res => {
+          resolve(res)
+        })
+        .catch(err => {
+          if(err.response.data.message === 'invalid token') reject('expired')
+          else reject(err)
+            
+        })
+      })
+    },
   },
   getters: {
     isLoggedIn: state => !!state.token,
