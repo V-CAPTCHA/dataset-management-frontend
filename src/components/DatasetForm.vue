@@ -41,24 +41,13 @@
             ></v-text-field>
             <!-- textchip -->
 
-            <v-alert v-show="answer.length>=5" dismissible color="red" text type="info"
-              >Max set of answer is 5 !!!</v-alert
-            >
-            <v-text-field
-            placeholder="Answer set for dataset"
-              label="Answer (max 5)"
+            <vue-tags-input
               v-model="textchip"
-              v-on:keyup.enter="addChips()"
-              required
-            >
-              <template v-slot:prepend-inner>
-                <div v-for="(chipText, index) in answer" :key="index">
-                  <v-chip @click="delChips(chipText)" class="ma-1">
-                    {{ chipText }}
-                  </v-chip>
-                </div>
-              </template>
-            </v-text-field>
+              id="taginput"
+              :tags="tags"
+              @tags-changed="(newTags) => (tags = newTags)"
+              :placeholder="'Enter set of answers'"
+            />
           </v-col>
         </v-row>
       </v-card-text>
@@ -94,8 +83,12 @@
 </template>
 
 <script>
+import VueTagsInput from '@johmun/vue-tags-input';
 export default {
   name: 'KeyForm',
+  components: {
+    VueTagsInput,
+  },
   props: {
     cancel: Function,
     title: String,
@@ -112,6 +105,7 @@ export default {
       files: [],
       question: '',
       textchip: '',
+      tags: [],
       answer: [],
       url: null,
       datasetAPI: process.env.VUE_APP_DATASET_URL,
@@ -122,24 +116,29 @@ export default {
   },
   methods: {
     confirm: function() {
+      this.answer = []
+        this.tags.map((tag) => {
+        this.answer.push(tag.text)
+        })
       let DatasetFormData = new FormData();
       DatasetFormData.append('dataset_image_upload', this.files);
       DatasetFormData.append('dataset_question', this.question);
       DatasetFormData.append('dataset_reply', this.answer);
 
-      //create key
+      //create dataset
       if (this.isCreate) {
         this.$store.dispatch('createDataset', DatasetFormData).then(() => {
           this.cancel();
         });
       }
-      //edit key
+      //edit dataset
       else if (this.isEdit) {
         let DatasetFormData = new FormData();
         DatasetFormData.append('id', this.id);
         DatasetFormData.append('dataset_image_upload', this.files);
         DatasetFormData.append('new_dataset_question', this.question);
         DatasetFormData.append('new_dataset_reply', this.answer);
+        
         this.$store.dispatch('editDataset', DatasetFormData).then(() => {
           this.cancel();
         });
@@ -148,18 +147,6 @@ export default {
     onFileChange: function(e) {
       this.url = URL.createObjectURL(this.files);
     },
-    addChips() {
-      if (this.textchip.length && this.answer.length < 5) {
-        this.answer.push(this.textchip);
-        this.textchip = '';
-      }
-    },
-    delChips(chip) {
-      var index = this.answer.indexOf(chip);
-      if (index !== -1) {
-        this.answer.splice(index, 1);
-      }
-    },
   },
   mounted() {
     this.id = this.dataset_id;
@@ -167,6 +154,14 @@ export default {
     this.question = this.dataset_question;
     if (this.dataset_reply) {
       this.answer = this.dataset_reply;
+      this.answer.map((item) => {
+        var data = {
+          text: item ,
+          tiClasses:
+            'ti-valid' ,
+        };
+        this.tags.push(data);
+      });
     } else {
       this.answer = [];
       this.question = '';
